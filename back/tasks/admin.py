@@ -1,3 +1,17 @@
 from django.contrib import admin
 
-# Register your models here.
+from tasks.models import TasksGroupModel, TaskModel
+
+
+@admin.register(TasksGroupModel)
+class TasksGroupAdmin(admin.ModelAdmin):
+
+    list_display = ('name', 'author',)
+    list_filter = ('author',)
+
+@admin.register(TaskModel)
+class TaskAdmin(admin.ModelAdmin):
+
+    list_display = ('name', 'author',)
+    list_filter = ('author',)
+    readonly_fields = ('created',)

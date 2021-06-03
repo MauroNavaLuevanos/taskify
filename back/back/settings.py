@@ -42,6 +42,9 @@ INSTALLED_APPS = [
 
     # Installed
     'solo',
+
+    # Custom
+    'tasks',
 ]
 
 MIDDLEWARE = [
