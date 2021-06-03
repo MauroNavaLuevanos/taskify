@@ -2,4 +2,4 @@ env/
 .env
 **db.*
 **.pyc
-back/static/**
+backend/static/**
