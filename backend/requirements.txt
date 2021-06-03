@@ -4,6 +4,7 @@ autopep8==1.5.7
 Django==3.2.4
 django-3-jet==1.0.8
 django-solo==1.1.5
+djangorestframework==3.12.4
 isort==5.8.0
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
