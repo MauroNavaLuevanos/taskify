@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # Installed
     'solo',
+    'rest_framework',
 
     # Custom
     'tasks',
