@@ -20,11 +20,9 @@ class TasksGroupModel(models.Model):
     def __str__(self):
         return str(self.name)
 
-        class Meta:
-            db_table = ''
-            managed = True
-            verbose_name = 'Tasks Group'
-            verbose_name_plural = 'Tasks Groups'
+    class Meta:
+        verbose_name = 'Tasks Group'
+        verbose_name_plural = 'Tasks Groups'
 
 
 class TaskModel(models.Model):
