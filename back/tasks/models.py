@@ -39,8 +39,8 @@ class TaskModel(models.Model):
     finished_date = models.DateTimeField(_("Finished Date"), auto_now=False,
         auto_now_add=False, blank=True, null=True)
     created = models.DateTimeField(_("Created Date"), auto_now_add=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Author"),
-        on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+        verbose_name=_("Author"), on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.name)
