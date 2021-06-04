@@ -7,12 +7,23 @@ from django.conf import settings
 
 
 class TasksGroupModel(models.Model):
-    '''Tasks Group'''
+    '''Tasks Group model'''
 
-    name = models.CharField(_("Name"), max_length=50)
-    description = models.TextField(_("Description"), blank=True, null=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Author"),
-        on_delete=models.CASCADE, related_name='tasks_groups')
+    name = models.CharField(
+        _("Name"),
+        max_length=50
+    )
+    description = models.TextField(
+        _("Description"),
+        blank=True,
+        null=True
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Author"),
+        on_delete=models.CASCADE,
+        related_name='tasks_groups'
+    )
 
     def __str__(self):
         return str(self.name)
@@ -25,14 +36,36 @@ class TasksGroupModel(models.Model):
 class TaskModel(models.Model):
     '''Task model'''
 
-    name = models.CharField(_("Name"), max_length=50)
-    description = models.TextField(_("Description"), blank=True, null=True)
-    finished = models.BooleanField(_("Finished"), default=False)
-    finished_date = models.DateTimeField(_("Finished Date"), auto_now=False,
-        auto_now_add=False, blank=True, null=True)
-    created = models.DateTimeField(_("Created Date"), auto_now_add=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tasks',
-        verbose_name=_("Author"), on_delete=models.CASCADE)
+    name = models.CharField(
+        _("Name"),
+        max_length=50
+    )
+    description = models.TextField(
+        _("Description"),
+        blank=True,
+        null=True
+    )
+    finished = models.BooleanField(
+        _("Finished"),
+        default=False
+    )
+    finished_date = models.DateTimeField(
+        _("Finished Date"),
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True
+    )
+    created = models.DateTimeField(
+        _("Created Date"),
+        auto_now_add=True
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='tasks',
+        verbose_name=_("Author"),
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return str(self.name)

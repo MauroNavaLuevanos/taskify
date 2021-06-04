@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # Custom
     'tasks',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'back.wsgi.application'
+
+# AUTH
+AUTH_USER_MODEL = 'users.UserModel'
 
 
 # Database
