@@ -13,11 +13,16 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskModel
         fields = (
-            'id',
             'name',
             'description',
-            'created',
-            'finished',
-            'finished_date',
             'author',
+            'finished',
+            'time_limit',
+            'finished_date',
+            'created',
         )
+        read_only_fields = (
+            'created',
+        )
+
+

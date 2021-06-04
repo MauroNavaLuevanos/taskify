@@ -45,10 +45,14 @@ class TaskModel(models.Model):
         blank=True,
         null=True
     )
-    finished = models.BooleanField(
-        _("Finished"),
-        default=False
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='tasks',
+        verbose_name=_("Author"),
+        on_delete=models.CASCADE
     )
+    finished = models.BooleanField(_("Finished"), default=False)
+    time_limit = models.PositiveSmallIntegerField(_("Time"))
     finished_date = models.DateTimeField(
         _("Finished Date"),
         auto_now=False,
@@ -56,16 +60,7 @@ class TaskModel(models.Model):
         blank=True,
         null=True
     )
-    created = models.DateTimeField(
-        _("Created Date"),
-        auto_now_add=True
-    )
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='tasks',
-        verbose_name=_("Author"),
-        on_delete=models.CASCADE
-    )
+    created = models.DateTimeField(_("Created Date"), auto_now_add=True)
 
     def __str__(self):
         return str(self.name)

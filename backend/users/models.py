@@ -1,12 +1,12 @@
 '''Users models'''
 
 # Django
-from django.contrib.auth.models import AbstractBaseUser, UserManager
+from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class UserModel(AbstractBaseUser):
+class UserModel(AbstractBaseUser, PermissionsMixin):
     '''User model'''
 
     email = models.EmailField(
