@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # Installed
     'solo',
     'rest_framework',
+    'rest_framework.authtoken',
 
     # Custom
     'tasks',

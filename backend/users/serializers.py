@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 
 # Django REST Framework
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 # Models
 from users.models import UserModel
@@ -36,5 +37,13 @@ class UserLoginSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError('Invalid Credentials')
 
+        self.context['user'] = user
+
         return data
 
+    def create(self, data):
+        '''Generate or retrieve new token'''
+
+        token, created = Token.objects.get_or_create(user=self.context['user'])
+
+        return self.context['user'], token.key

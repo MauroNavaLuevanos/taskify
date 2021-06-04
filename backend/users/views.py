@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # Serializers
-from users.serializers import UserLoginSerializer
+from users.serializers import UserLoginSerializer, UserSerializer
 
 # Models
 from users.models import UserModel
@@ -23,10 +23,10 @@ class UserLoginView(APIView):
 
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        token = serializer.save()
+        user, token = serializer.save()
         data = {
-            'status': 'ok',
-            'token': token
+            'user': UserSerializer(user).data,
+            'access__token': token
         }
 
         return Response(data, status=status.HTTP_201_CREATED)
