@@ -1,13 +1,10 @@
 '''Tasks Serializers'''
 
-# Django
-from django.contrib.auth.models import User
-
 # Django REST Framework
 from rest_framework import serializers
 
 # Models
-from .models import TaskModel
+from tasks.models import TaskModel
 
 
 class TaskSerializer(serializers.ModelSerializer):
