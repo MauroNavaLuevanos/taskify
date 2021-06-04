@@ -13,7 +13,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['pk', 'email', 'username']
+        fields = [
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+        ]
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -25,4 +31,4 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaskModel
-        fields = ['pk', 'name', 'description', 'author']
+        fields = '__all__'

@@ -1,7 +1,9 @@
 from django.shortcuts import render
 
-from rest_framework import viewsets
+from rest_framework import authentication
 from rest_framework import permissions
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 
 from .models import TaskModel
 
@@ -9,10 +11,15 @@ from .serializers import TaskSerializer
 
 # Create your views here.
 
+@permission_classes(permissions.AllowAny)
+@api_view(['GET'])
+def list_tasks(request):
+    '''
+    View to list all tasks
+    '''
 
-class TaskViewSet(viewsets.ModelViewSet):
-    ''''''
+    qs = TaskModel.objects.all().order_by('-created')
+    serializer = TaskSerializer(qs, many=True)
 
-    queryset = TaskModel.objects.all().order_by('-created')
-    serializer_class = TaskSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    return Response(serializer.data)
+
