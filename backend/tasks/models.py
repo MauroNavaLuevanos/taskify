@@ -1,20 +1,13 @@
-'''
- Taks Models Module
-'''
+'''Tasks Models'''
 
+# Django
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.conf import settings
 
-# Create your models here.
-
 
 class TasksGroupModel(models.Model):
-    '''
-        Tasks Groups
-        ---------
-        Represents a group of tasks, helps to get more order and group the tasks
-    '''
+    '''Tasks Group'''
 
     name = models.CharField(_("Name"), max_length=50)
     description = models.TextField(_("Description"), blank=True, null=True)
@@ -30,12 +23,7 @@ class TasksGroupModel(models.Model):
 
 
 class TaskModel(models.Model):
-    '''
-        Task
-        -------
-
-        Represents a task
-    '''
+    '''Task model'''
 
     name = models.CharField(_("Name"), max_length=50)
     description = models.TextField(_("Description"), blank=True, null=True)

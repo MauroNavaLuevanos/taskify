@@ -1,3 +1,4 @@
+'''Tasks URLs'''
 from django.urls import path
 
 from tasks.views import list_tasks
