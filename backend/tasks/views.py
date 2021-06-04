@@ -13,10 +13,22 @@ from tasks.models import TaskModel
 # Serializers
 from tasks.serializers import TaskSerializer
 
+# Permissions
+from tasks.permissions import TaskIsEnabledToUpdate
+
 
 class TasksViewSet(viewsets.ModelViewSet):
     '''Tasks viewset'''
 
-    permission_classes = (IsAuthenticated,)
     queryset = TaskModel.objects.all().order_by('-created')
     serializer_class = TaskSerializer
+
+    def get_permissions(self):
+        '''Assign permissions based on actions'''
+
+        permissions = [IsAuthenticated]
+
+        if self.action in ['update', 'partial_update']:
+            permissions.append(TaskIsEnabledToUpdate)
+
+        return [permission() for permission in permissions]
