@@ -1,25 +1,20 @@
+'''Tasks Views'''
+
+# Django
 from django.shortcuts import render
 
-from rest_framework import authentication
-from rest_framework import permissions
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
+# Django REST Framework
+from rest_framework import viewsets
 
-from .models import TaskModel
+# Models
+from tasks.models import TaskModel
 
-from .serializers import TaskSerializer
+# Serializers
+from tasks.serializers import TaskSerializer
 
-# Create your views here.
 
-@permission_classes(permissions.AllowAny)
-@api_view(['GET'])
-def list_tasks(request):
-    '''
-    View to list all tasks
-    '''
+class TasksViewSet(viewsets.ModelViewSet):
+    '''Tasks viewset'''
 
-    qs = TaskModel.objects.all().order_by('-created')
-    serializer = TaskSerializer(qs, many=True)
-
-    return Response(serializer.data)
-
+    queryset = TaskModel.objects.all()
+    serializer_class = TaskSerializer

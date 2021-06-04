@@ -12,4 +12,11 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaskModel
-        fields = ('name', 'description', 'created', 'finished')
+        fields = (
+            'name',
+            'description',
+            'created',
+            'finished',
+            'finished_date',
+            'author',
+        )

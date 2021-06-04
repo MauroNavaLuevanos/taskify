@@ -1,8 +1,17 @@
 '''Tasks URLs'''
-from django.urls import path
 
-from tasks.views import list_tasks
+# Django
+from django.urls import path, include
+
+# Django REST Framework
+from rest_framework.routers import DefaultRouter
+
+# Views
+from tasks.views import TasksViewSet
+
+router = DefaultRouter()
+router.register(r'tasks', TasksViewSet, basename='task')
 
 urlpatterns = [
-    path('tasks/', list_tasks, name="tasks"),
+    path('', include(router.urls)),
 ]
