@@ -35,7 +35,7 @@ class UsersViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
         if self.action in ['signup', 'login']:
             permissions = [AllowAny]
-        elif self.action in ['retrieve']:
+        elif self.action in ['retrieve', 'update', 'partial_update', 'delete']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
             permissions = [IsAuthenticated]
