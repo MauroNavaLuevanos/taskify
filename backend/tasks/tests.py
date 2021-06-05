@@ -90,12 +90,19 @@ class TaskUpdateTestCase(APITestCase):
     def setUp(self):
         '''Test setup'''
 
-        # Create temporal user
+        # Create temporal users
         self.user = UserModel.objects.create(
             username='lukeskywallker',
             email='luke@grepublic.com',
             password='sithkiller123',
             first_name='Luke',
+            last_name='Skywalker'
+        )
+        self.another_user = UserModel.objects.create(
+            username='darthvader',
+            email='darth@empire.com',
+            password='deathstar123',
+            first_name='Anakin',
             last_name='Skywalker'
         )
 
@@ -111,18 +118,20 @@ class TaskUpdateTestCase(APITestCase):
         self.token = Token.objects.create(user=self.user).key
         self.client.credentials(HTTP_AUTHORIZATION='Token {}'.format(self.token))
 
+        # Client common vars
+        self.endpoint = '/tasks/{}/'.format(self.task.id)
+
     def test_success_task_update(self):
         '''Test task task'''
 
         # Send request
-        url = '/tasks/{}/'.format(self.task.id)
         request_data = {
             'name': '{} Updated'.format(self.task.name),
             'time_limit': self.task.time_limit + 2,
             'author': self.task.author.id,
             'description': '{} Updated'.format(self.task.description),
         }
-        request = self.client.put(url, request_data, format='json')
+        request = self.client.put(self.endpoint, request_data, format='json')
 
         # Raise validations
         self.assertEqual(request.status_code, status.HTTP_200_OK)
@@ -131,11 +140,10 @@ class TaskUpdateTestCase(APITestCase):
         '''Test task partial update'''
 
         # Send request
-        url = '/tasks/{}/'.format(self.task.id)
         request_data = {
             'finished': True
         }
-        request = self.client.patch(url, request_data, format='json')
+        request = self.client.patch(self.endpoint, request_data, format='json')
 
         # Raise validations
         self.assertEqual(request.status_code, status.HTTP_200_OK)
@@ -148,16 +156,21 @@ class TaskUpdateTestCase(APITestCase):
         been already marked as finished/completed
         '''
 
+        # Update current task
+        request_data = {
+            'finished': True
+        }
+        updated_request = self.client.patch(self.endpoint, request_data, format='json')
+
         # Send request
-        url = '/tasks/{}/'.format(self.task.id)
         request_data = {
             'name': '{} after finished'.format(self.task.name),
             'time_limit': self.task.time_limit,
             'author': self.task.author.id,
             'description': self.task.description
         }
-        request = self.client.post(url, request_data, format='json')
+        request = self.client.put(self.endpoint, request_data, format='json')
 
         # Raise validations
-        self.assertEqual(request.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
+        self.assertEqual(updated_request.status_code, status.HTTP_200_OK)
+        self.assertEqual(request.status_code, status.HTTP_403_FORBIDDEN)
