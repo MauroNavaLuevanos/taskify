@@ -14,7 +14,7 @@ from tasks.models import TaskModel
 from tasks.serializers import TaskSerializer
 
 # Permissions
-from tasks.permissions import TaskIsEnabledToUpdate
+from tasks.permissions import TaskIsEnabledToUpdate, UserAuthorizedToUpdateTask
 
 
 class TasksViewSet(viewsets.ModelViewSet):
@@ -30,5 +30,6 @@ class TasksViewSet(viewsets.ModelViewSet):
 
         if self.action in ['update', 'partial_update']:
             permissions.append(TaskIsEnabledToUpdate)
+            permissions.append(UserAuthorizedToUpdateTask)
 
         return [permission() for permission in permissions]

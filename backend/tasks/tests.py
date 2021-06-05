@@ -3,10 +3,7 @@
 # Django REST Framework
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from rest_framework.test import APITestCase
-
-# Django
-from django.test import TestCase
+from rest_framework.test import APITestCase, APIClient
 
 # Models
 from users.models import UserModel
@@ -114,9 +111,14 @@ class TaskUpdateTestCase(APITestCase):
             author=self.user,
         )
 
-        # Get and set the token in the test client
-        self.token = Token.objects.create(user=self.user).key
-        self.client.credentials(HTTP_AUTHORIZATION='Token {}'.format(self.token))
+        # Get users tokens
+        self.another_user_token = Token.objects.create(
+            user=self.another_user
+        ).key
+        self.user_token = Token.objects.create(user=self.user).key
+
+        # Defautl token
+        self.client.credentials(HTTP_AUTHORIZATION='Token {}'.format(self.user_token))
 
         # Client common vars
         self.endpoint = '/tasks/{}/'.format(self.task.id)
@@ -152,15 +154,19 @@ class TaskUpdateTestCase(APITestCase):
         '''
         Test task marked as finished update
 
-        API must raise an error, a task update must be disbled if the same has
-        been already marked as finished/completed
+        API must raise an error, task updating must be disbled if has been
+        already marked as finished/completed
         '''
 
         # Update current task
         request_data = {
             'finished': True
         }
-        updated_request = self.client.patch(self.endpoint, request_data, format='json')
+        updated_request = self.client.patch(
+            self.endpoint,
+            request_data,
+            format='json'
+        )
 
         # Send request
         request_data = {
@@ -169,8 +175,40 @@ class TaskUpdateTestCase(APITestCase):
             'author': self.task.author.id,
             'description': self.task.description
         }
-        request = self.client.put(self.endpoint, request_data, format='json')
+        put_request = self.client.put(self.endpoint, request_data, format='json')
+        patch_request = self.client.patch(
+            self.endpoint,
+            request_data,
+            format='json'
+        )
 
         # Raise validations
         self.assertEqual(updated_request.status_code, status.HTTP_200_OK)
+        self.assertEqual(put_request.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(patch_request.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_task_by_another_user(self):
+        '''
+        Test updating a task by another user
+
+        The tasks only can be edited by their author
+        '''
+
+        # Create new client
+        client = APIClient()
+        client.credentials(
+            HTTP_AUTHORIZATION='Token {}'.format(self.another_user_token)
+        )
+
+        # Send request
+        request_data = {
+            'finished': True
+        }
+        request = client.patch(
+            self.endpoint,
+            request_data,
+            format='json'
+        )
+
+        # Raise validations
         self.assertEqual(request.status_code, status.HTTP_403_FORBIDDEN)
