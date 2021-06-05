@@ -16,7 +16,7 @@ class CreateUserTestCase(TestCase):
         pass
 
 
-    def test_code_generation(self):
+    def test_user_creation(self):
         '''User creation test genration'''
 
         user = UserModel.objects.create(
