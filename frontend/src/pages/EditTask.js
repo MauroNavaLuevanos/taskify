@@ -114,12 +114,26 @@ export default class EditTask extends React.Component {
    */
   handleChange = (event) => {
     const { taskForm, enableToEdit } = this.state;
+    const fieldName = event.target.name;
+    const fieldType = typeof taskForm[fieldName];
+    let value = event.target.value;
+
+    switch (fieldType) {
+      case 'boolean':
+        value = event.target.checked;
+        break;
+      case 'number':
+        value = parseInt(event.target.value);
+        break;
+      default:
+        value = value || '';
+    }
 
     if (enableToEdit) {
       this.setState({
         taskForm: {
           ...taskForm,
-          [event.target.name]: typeof taskForm.finished === 'boolean' ? event.target.checked : event.target.value,
+          [fieldName]: value,
         },
       });
     }
@@ -162,6 +176,7 @@ export default class EditTask extends React.Component {
 
     return (
       <React.Fragment>
+        <h1>Edit task</h1>
         {error && <Alert variant="danger">{error}</Alert>}
         <TaskForm disabled={!enableToEdit} changeMethod={this.handleChange} taskForm={taskForm} submitMethod={this.handleSubmit} />
       </React.Fragment>

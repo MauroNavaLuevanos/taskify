@@ -53,6 +53,18 @@ export default class EditTask extends React.Component {
           />
         </Form.Group>
 
+        <Form.Group className="mb-3" controlId="time_limit">
+          <Form.Label>Time Limit (Minutes)</Form.Label>
+          <Form.Control
+            disabled={disabled}
+            name="time_limit"
+            value={taskForm.time_limit}
+            type="number"
+            placeholder="30"
+            onChange={changeMethod}
+          />
+        </Form.Group>
+
         <Form.Group className="mb-3" controlId="name">
           <Form.Label>Description</Form.Label>
           <Form.Control

@@ -3,6 +3,9 @@
 // React
 import React from 'react';
 
+// React Router
+import { Link } from 'react-router-dom';
+
 // React Bootstrap
 import { Alert } from 'react-bootstrap';
 
@@ -61,7 +64,9 @@ export default class TasksList extends React.Component {
       <React.Fragment>
         <h1>Tasks List</h1>
         {error && <Alert variant="danger">{error}</Alert>}
-
+        <Link className="btn btn-primary mb-4" to="/tasks/create">
+          Create Task
+        </Link>
         {tasksList}
       </React.Fragment>
     );

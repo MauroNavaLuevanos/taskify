@@ -12,6 +12,8 @@ const endpointHost = debug ? 'http://localhost:8000/' : '';
  */
 export function SendAPIRequest(path = '', accessToken = '', body = {}, method = 'GET') {
   return new Promise((resolve, reject) => {
+    console.log('sending apu request');
+
     const endpoint = endpointHost + path;
     const requestConfiguration = {
       method,

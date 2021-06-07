@@ -17,7 +17,7 @@ export default function Task(props) {
   }
 
   return (
-    <div className="TaskWrapper p-3">
+    <div className="TaskWrapper mb-3">
       <Card className="Task">
         <Card.Body>
           <Form.Check checked={task.finished} disabled={task.finished} label="Task Completed" />
