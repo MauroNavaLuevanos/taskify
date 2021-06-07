@@ -11,6 +11,13 @@ import { Card, Alert, Button, Form } from 'react-bootstrap';
 
 export default function Task(props) {
   const task = props.task;
+  let TaskCardClasses = 'Task';
+
+  if (!task.finished) {
+    TaskCardClasses += ' shadow';
+  } else {
+    TaskCardClasses += ' bg-light';
+  }
 
   if (!task) {
     return <Alert variant="danger">Invalid task</Alert>;
@@ -18,7 +25,7 @@ export default function Task(props) {
 
   return (
     <div className="TaskWrapper mb-3">
-      <Card className="Task">
+      <Card className={TaskCardClasses}>
         <Card.Body>
           <Form.Check checked={task.finished} disabled={task.finished} label="Task Completed" />
           <h2>{task.name}</h2>
