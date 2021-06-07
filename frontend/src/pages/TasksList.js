@@ -3,14 +3,21 @@
 // React
 import React from 'react';
 
+// React Bootstrap
+import { Alert } from 'react-bootstrap';
+
 // Components
 import Task from '../Components/Task';
+
+// Utils
+import { SendAPIRequest } from '../utils/api-calls';
 
 export default class TasksList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      error: null,
       loading: true,
       tasks: [],
       debug: true,
@@ -18,25 +25,16 @@ export default class TasksList extends React.Component {
   }
 
   fetchTasks = () => {
-    const endpoint = this.state.debug ? 'http://localhost:8000/tasks/' : '';
     const accessToken = '3ff5cc5236d92852c74d7fc272b39de715061e8f';
 
-    fetch(endpoint, {
-      method: 'GET',
-      headers: {
-        Authorization: `Token ${accessToken}`,
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
+    SendAPIRequest('tasks/', accessToken)
       .then((response) => {
         this.setState({
           tasks: response.results,
         });
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((error) => {
+        this.setState({ error: error.message });
       })
       .then(() => {
         this.setState({ loading: false });
@@ -48,7 +46,7 @@ export default class TasksList extends React.Component {
   }
 
   render() {
-    const { tasks, loading } = this.state;
+    const { tasks, loading, error } = this.state;
 
     const tasksList = tasks.length ? (
       tasks.map((task, taskIndex) => <Task key={taskIndex} task={task} />)
@@ -62,6 +60,8 @@ export default class TasksList extends React.Component {
     return (
       <React.Fragment>
         <h1>Tasks List</h1>
+        {error && <Alert variant="danger">{error}</Alert>}
+
         {tasksList}
       </React.Fragment>
     );

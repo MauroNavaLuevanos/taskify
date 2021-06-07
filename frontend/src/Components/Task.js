@@ -7,7 +7,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 // React Bootstrap
-import { Card, Alert, Button } from 'react-bootstrap';
+import { Card, Alert, Button, Form } from 'react-bootstrap';
 
 export default function Task(props) {
   const task = props.task;
@@ -20,19 +20,20 @@ export default function Task(props) {
     <div className="TaskWrapper p-3">
       <Card className="Task">
         <Card.Body>
+          <Form.Check checked={task.finished} disabled={task.finished} label="Task Completed" />
           <h2>{task.name}</h2>
           <p>{task.description}</p>
         </Card.Body>
-        <Card.Body>
-          {!task.finished && (
-            <Link className="btn btn-primary" to={`tasks/${task.id}/`}>
+        {!task.finished && (
+          <Card.Body>
+            <Link className="btn btn-primary mr-3" to={`tasks/${task.id}/`}>
               Edit
             </Link>
-          )}
-          <Button className="ml-3" variant="danger" href="#">
-            Delete
-          </Button>
-        </Card.Body>
+            <Button variant="danger" href="#">
+              Delete
+            </Button>
+          </Card.Body>
+        )}
       </Card>
     </div>
   );

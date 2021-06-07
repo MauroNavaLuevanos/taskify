@@ -38,7 +38,7 @@ export default class EditTask extends React.Component {
           name="finished"
           onChange={changeMethod}
           checked={taskForm.finished}
-          label="Tarea terminada"
+          label="Task Completed"
         ></Form.Check>
 
         <Form.Group className="mb-3" controlId="name">
