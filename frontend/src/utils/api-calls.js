@@ -28,12 +28,19 @@ export function SendAPIRequest(path = '', accessToken = '', body = {}, method = 
 
     fetch(endpoint, requestConfiguration)
       .then((response) => {
-        return response.json();
+        console.log(response);
+
+        if (!response.ok) {
+          reject(response);
+        } else {
+          return response.json();
+        }
       })
       .then((response) => {
         resolve(response);
       })
       .catch((error) => {
+        console.error('Mierda');
         reject(error);
       });
   });

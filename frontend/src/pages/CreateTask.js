@@ -47,13 +47,16 @@ export default class CreateTask extends React.Component {
 
       SendAPIRequest(requestPath, accessToken, taskForm, requestMethod)
         .then((response) => {
+          console.log('A huevo');
+
           this.setState({
             taskForm: response,
             enableToEdit: !response.finished,
           });
         })
         .catch((error) => {
-          this.setState({ error: error.message });
+          console.error('No mames');
+          this.setState({ error: error.message || JSON.stringify(error) });
         })
         .then(() => {
           this.setState({ loading: false });

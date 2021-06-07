@@ -33,7 +33,7 @@ export default function Task(props) {
         </Card.Body>
         {!task.finished && (
           <Card.Body>
-            <Link className="btn btn-primary mr-3" to={`tasks/${task.id}/`}>
+            <Link className="btn btn-primary mr-3" to={`/tasks/${task.id}/`}>
               Edit
             </Link>
             <Button variant="danger" href="#">

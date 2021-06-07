@@ -42,7 +42,7 @@ export default class EditTask extends React.Component {
         ></Form.Check>
 
         <Form.Group className="mb-3" controlId="name">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Name*</Form.Label>
           <Form.Control
             disabled={disabled}
             name="name"
@@ -54,12 +54,13 @@ export default class EditTask extends React.Component {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="time_limit">
-          <Form.Label>Time Limit (Minutes)</Form.Label>
+          <Form.Label>Time Limit (Minutes)*</Form.Label>
           <Form.Control
             disabled={disabled}
             name="time_limit"
             value={taskForm.time_limit}
             type="number"
+            required="true"
             placeholder="30"
             onChange={changeMethod}
           />
