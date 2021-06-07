@@ -3,6 +3,10 @@
 // React
 import React, { useState } from 'react';
 
+// React Reudx
+import { useDispatch } from 'react-redux';
+import { deleteTask } from '../store/slicers/tasks';
+
 // React Router
 import { Link } from 'react-router-dom';
 
@@ -14,9 +18,11 @@ import { SendAPIRequest } from '../utils/api-calls';
 
 export default function Task(props) {
   const [loading, setLoading] = useState(false);
-  const [accesToken, setAccesToken] = useState('3ff5cc5236d92852c74d7fc272b39de715061e8f');
   const [task, setTask] = useState(props.task);
   const [error, setError] = useState(null);
+  const accesToken = '3ff5cc5236d92852c74d7fc272b39de715061e8f';
+
+  const dispatch = useDispatch();
 
   let TaskCardClasses = 'Task';
 
@@ -30,9 +36,22 @@ export default function Task(props) {
     return <Alert variant="danger">Invalid task</Alert>;
   }
 
+  function DeleteTask() {
+    const taskId = task.id;
+    setError(null);
+    setLoading(true);
+
+    SendAPIRequest(`tasks/${task.id}/`, accesToken, {}, 'DELETE')
+      .then((response) => {
+        dispatch(deleteTask(taskId));
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  }
+
   /**
-   * Sets a task as finished, sending a PATCH method the finished attribute as
-   * true
+   * Sets the task as finished, sending a PATCH method with the finished attribute as true
    *
    * @returns {void}
    */
@@ -79,7 +98,7 @@ export default function Task(props) {
             <Link className="btn btn-primary mr-3" to={`/tasks/${task.id}/`}>
               Edit
             </Link>
-            <Button variant="danger" href="#" disabled={loading}>
+            <Button variant="danger" onClick={DeleteTask} disabled={loading}>
               Delete
             </Button>
           </Card.Body>

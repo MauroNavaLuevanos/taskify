@@ -1,8 +1,11 @@
 /*App Redux Store*/
 
 // Redux
-import { createStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import tasksReducer from './slicers/tasks';
 
-export default createStore({
-  reducer: {},
+export default configureStore({
+  reducer: {
+    tasks: tasksReducer,
+  },
 });

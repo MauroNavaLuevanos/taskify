@@ -105,7 +105,7 @@ export default class CreateTask extends React.Component {
         value = event.target.checked;
         break;
       case 'number':
-        value = parseInt(event.target.value);
+        value = parseInt(event.target.value || 0);
         break;
       default:
         value = value || '';
