@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 // Pages
 import TasksList from '../pages/TasksList';
+import EditTask from '../pages/EditTask';
 import Layout from './Layout';
 
 // Styles
@@ -14,6 +15,7 @@ export default function App() {
       <Layout>
         <Switch>
           <Route exact path="/tasks" component={TasksList} />
+          <Route exact path="/tasks/:taskId" component={EditTask} />
         </Switch>
       </Layout>
     </BrowserRouter>
