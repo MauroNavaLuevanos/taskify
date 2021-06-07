@@ -1,5 +1,3 @@
-/* Edit task page */
-
 // React
 import React from 'react';
 
@@ -12,61 +10,42 @@ import TaskForm from '../Components/TaskForm';
 // Utils
 import { SendAPIRequest } from '../utils/api-calls';
 
-export default class EditTask extends React.Component {
+export default class CreateTask extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       accessToken: '3ff5cc5236d92852c74d7fc272b39de715061e8f',
       error: null,
-      enableToEdit: false,
-      loading: true,
+      loading: false,
+      enableToEdit: true,
       taskForm: {
+        id: null,
         name: '',
-        description: '',
         finished: false,
-        timeLimit: 0,
+        time_limit: 0,
       },
     };
   }
 
   /**
-   * Fetch a task based in the id provided by react router
-   *
-   * @returns {void}
-   */
-  fetchTask = async () => {
-    const { accessToken } = this.state;
-    const taskId = this.props.match.params.taskId;
-
-    SendAPIRequest(`tasks/${taskId}/`, accessToken)
-      .then((response) => {
-        this.setState({
-          taskForm: response,
-          enableToEdit: !response.finished,
-        });
-      })
-      .catch((error) => {
-        this.setState({ error: error });
-      })
-      .then(() => {
-        this.setState({ loading: false });
-      });
-  };
-
-  /**
-   * Update task data, sending a PUT request to the API
+   * Creates a task if the id stills as null in the taskForm.
+   * Updates the task if id is defined in the taskForm, sending a PUT request to the API
    *
    * Sends the taskForm data.
    *
    * @returns {void}
    */
-  updateTask = () => {
+  saveTask = () => {
     const { accessToken, taskForm, enableToEdit } = this.state;
-    const taskId = this.props.match.params.taskId;
+    const taskId = taskForm.id;
+    const requestMethod = taskId ? 'PUT' : 'POST';
+    let requestPath = taskId ? `tasks/${taskId}/` : 'tasks/';
 
     if (enableToEdit) {
-      SendAPIRequest(`tasks/${taskId}/`, accessToken, taskForm, 'PUT')
+      this.setState({ loading: true });
+
+      SendAPIRequest(requestPath, accessToken, taskForm, requestMethod)
         .then((response) => {
           this.setState({
             taskForm: response,
@@ -79,6 +58,26 @@ export default class EditTask extends React.Component {
         .then(() => {
           this.setState({ loading: false });
         });
+    }
+  };
+
+  /**
+   * Handles the submit event fired from a form
+   *
+   * This method must be called in the form onSubmit event.target.
+   * Calls the updateTaskMethod.
+   *
+   * @param {Event} event
+   */
+  handleSubmit = (event) => {
+    const { enableToEdit } = this.state;
+
+    event.preventDefault();
+
+    if (enableToEdit) {
+      this.setState({ loading: true, error: null });
+
+      this.saveTask();
     }
   };
 
@@ -119,46 +118,17 @@ export default class EditTask extends React.Component {
     }
   };
 
-  /**
-   * Handles the submit event fired from a form
-   *
-   * This method must be called in the form onSubmit event.target.
-   * Calls the updateTaskMethod.
-   *
-   * @param {Event} event
-   */
-  handleSubmit = (event) => {
-    const { enableToEdit } = this.state;
-
-    event.preventDefault();
-
-    if (enableToEdit) {
-      this.setState({ loading: true, error: null });
-
-      this.updateTask();
-    }
-  };
-
-  componentDidMount() {
-    this.fetchTask();
-  }
-
   render() {
-    const { loading, taskForm, error, enableToEdit } = this.state;
+    const { error, taskForm, loading } = this.state;
 
     if (loading) {
       return <h1>Loading...</h1>;
     }
 
-    if (!taskForm) {
-      return <Alert variant="danger">Invalid task</Alert>;
-    }
-
     return (
       <React.Fragment>
-        <h1>Edit task</h1>
         {error && <Alert variant="danger">{error}</Alert>}
-        <TaskForm disabled={!enableToEdit} changeMethod={this.handleChange} taskForm={taskForm} submitMethod={this.handleSubmit} />
+        <TaskForm taskForm={taskForm} changeMethod={this.handleChange} submitMethod={this.handleSubmit} />
       </React.Fragment>
     );
   }

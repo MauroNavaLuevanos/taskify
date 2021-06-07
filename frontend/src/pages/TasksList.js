@@ -33,7 +33,7 @@ export default class TasksList extends React.Component {
     SendAPIRequest('tasks/', accessToken)
       .then((response) => {
         this.setState({
-          tasks: response.results,
+          tasks: response,
         });
       })
       .catch((error) => {
@@ -51,11 +51,12 @@ export default class TasksList extends React.Component {
   render() {
     const { tasks, loading, error } = this.state;
 
-    const tasksList = tasks.length ? (
-      tasks.map((task, taskIndex) => <Task key={taskIndex} task={task} />)
-    ) : (
-      <h2>No hay tareas asignadas a este usuario</h2>
-    );
+    const tasksList =
+      tasks && tasks.length ? (
+        tasks.map((task, taskIndex) => <Task key={taskIndex} task={task} />)
+      ) : (
+        <h2>No hay tareas asignadas a este usuario</h2>
+      );
 
     if (loading) {
       return 'Loading...';
