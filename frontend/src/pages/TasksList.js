@@ -33,7 +33,7 @@ export default class TasksList extends React.Component {
     SendAPIRequest('tasks/', accessToken)
       .then((response) => {
         this.setState({
-          tasks: response,
+          tasks: response.data,
         });
       })
       .catch((error) => {

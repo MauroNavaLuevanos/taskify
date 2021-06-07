@@ -25,7 +25,7 @@ export default class EditTask extends React.Component {
         name: '',
         description: '',
         finished: false,
-        timeLimit: 0,
+        time_limit: 0,
       },
     };
   }
@@ -41,13 +41,15 @@ export default class EditTask extends React.Component {
 
     SendAPIRequest(`tasks/${taskId}/`, accessToken)
       .then((response) => {
+        const { data } = response;
+
         this.setState({
-          taskForm: response,
-          enableToEdit: !response.finished,
+          taskForm: data,
+          enableToEdit: !data.finished,
         });
       })
       .catch((error) => {
-        this.setState({ error: error });
+        this.setState({ error: error.message });
       })
       .then(() => {
         this.setState({ loading: false });
@@ -68,9 +70,10 @@ export default class EditTask extends React.Component {
     if (enableToEdit) {
       SendAPIRequest(`tasks/${taskId}/`, accessToken, taskForm, 'PUT')
         .then((response) => {
+          const { data } = response;
           this.setState({
-            taskForm: response,
-            enableToEdit: !response.finished,
+            taskForm: data,
+            enableToEdit: !data.finished,
           });
         })
         .catch((error) => {

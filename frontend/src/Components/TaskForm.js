@@ -48,6 +48,7 @@ export default class EditTask extends React.Component {
             name="name"
             value={taskForm.name}
             type="text"
+            required
             placeholder="Incredible task name"
             onChange={changeMethod}
           />
@@ -60,7 +61,7 @@ export default class EditTask extends React.Component {
             name="time_limit"
             value={taskForm.time_limit}
             type="number"
-            required="true"
+            required
             placeholder="30"
             onChange={changeMethod}
           />

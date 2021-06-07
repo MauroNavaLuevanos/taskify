@@ -22,6 +22,7 @@ export default class CreateTask extends React.Component {
       taskForm: {
         id: null,
         name: '',
+        description: '',
         finished: false,
         time_limit: 0,
       },
@@ -47,16 +48,15 @@ export default class CreateTask extends React.Component {
 
       SendAPIRequest(requestPath, accessToken, taskForm, requestMethod)
         .then((response) => {
-          console.log('A huevo');
+          const { data } = response;
 
           this.setState({
-            taskForm: response,
-            enableToEdit: !response.finished,
+            taskForm: data,
+            enableToEdit: !data.finished,
           });
         })
         .catch((error) => {
-          console.error('No mames');
-          this.setState({ error: error.message || JSON.stringify(error) });
+          this.setState({ error: error.message });
         })
         .then(() => {
           this.setState({ loading: false });
