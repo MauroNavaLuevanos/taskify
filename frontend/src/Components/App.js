@@ -1,27 +1,30 @@
 //React Router
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 // Pages
-import TasksList from '../pages/TasksList';
-import EditTask from '../pages/EditTask';
 import CreateTask from '../pages/CreateTask';
+import EditTask from '../pages/EditTask';
+import Login from '../pages/Login';
+import TasksList from '../pages/TasksList';
 
 // Components
 import Layout from './Layout';
+import PrivateRoute from './PrivateRoute';
 
 // Styles
 import './styles/App.css';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Layout>
         <Switch>
-          <Route exact path="/tasks" component={TasksList} />
-          <Route exact path="/tasks/create" component={CreateTask} />
-          <Route exact path="/tasks/:taskId" component={EditTask} />
+          <Route exact path="/login" component={Login} />
+          <PrivateRoute exact path="/tasks" component={TasksList} />
+          <PrivateRoute exact path="/tasks/create" component={CreateTask} />
+          <PrivateRoute exact path="/tasks/:taskId" component={EditTask} />
         </Switch>
       </Layout>
-    </BrowserRouter>
+    </Router>
   );
 }

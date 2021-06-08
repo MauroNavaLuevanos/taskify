@@ -43,7 +43,7 @@ class UsersViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
         return [permissions() for permissions in permissions]
 
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['POST'])
     def login(self, request):
         '''User login action'''
 
@@ -55,9 +55,9 @@ class UsersViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
             'access__token': token
         }
 
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(data, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['POST'])
     def signup(self, request):
         '''User signup action'''
 

@@ -12,31 +12,24 @@ const endpointHost = debug ? 'http://localhost:8000/' : '';
  * @param {string} method GET | POST | PUT | DELETE | PATCH
  * @returns {Promise<Object>} Request response data
  */
-export function SendAPIRequest(path = '', accessToken = '', payload = {}, method = 'GET') {
+export function SendAPIRequest(path = '', accessToken = '', payload = {}, method = 'GET', useToken = true) {
   return new Promise((resolve, reject) => {
     const endpoint = endpointHost + path;
-    // const requestConfiguration = {
-    //   method,
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Token ${accessToken}`,
-    //   },
-    // };
 
-    // Request with GET/HEAD method cannot have body.
-    // if (method !== 'GET') {
-    //   requestConfiguration.body = JSON.stringify(body);
-    // }
-
-    Axios({
+    const requestConf = {
       method: method.toLocaleLowerCase(),
       url: endpoint,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${accessToken}`,
       },
       data: payload,
-    })
+    };
+
+    if (useToken) {
+      requestConf.headers.Authorization = `Token ${accessToken}`;
+    }
+
+    Axios(requestConf)
       .then((response) => {
         resolve(response);
       })

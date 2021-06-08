@@ -1,6 +1,9 @@
 // React
 import React from 'react';
 
+// Redux
+import { useSelector } from 'react-redux';
+
 // React Router
 import { Link } from 'react-router-dom';
 
@@ -8,8 +11,10 @@ import { Link } from 'react-router-dom';
 import { Navbar } from 'react-bootstrap';
 
 export default function Header() {
+  const user = useSelector((store) => store.auth.user);
+
   return (
-    <Navbar>
+    <Navbar collapseOnSelect expand="lg">
       <Navbar.Brand href="tasks/">Taskify</Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
@@ -19,7 +24,7 @@ export default function Header() {
         <Link to="/tasks/create" className="nav-link">
           Create Task
         </Link>
-        <Navbar.Text>Signed in as: Mauro</Navbar.Text>
+        {user && <Navbar.Text>Signed in as: {user.username}</Navbar.Text>}
       </Navbar.Collapse>
     </Navbar>
   );
