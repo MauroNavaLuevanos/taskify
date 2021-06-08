@@ -49,7 +49,7 @@ export default function Header(props) {
             <Link to="/login/" className="nav-link">
               Login
             </Link>
-            <Link to="/login/" className="nav-link">
+            <Link to="/signup/" className="nav-link">
               Signup
             </Link>
           </React.Fragment>
