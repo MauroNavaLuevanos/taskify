@@ -42,7 +42,7 @@ class TaskModel(models.Model):
     def time_spent(self):
         difference = 0
 
-        if self.finished or not self.finished_date:
+        if not self.finished or not self.finished_date:
             difference = (datetime.now().replace(tzinfo=None) - self.created.replace(tzinfo=None)).total_seconds()
 
         else:
