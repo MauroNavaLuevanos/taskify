@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser, setAccessToken } from '../store/slicers/auth';
@@ -21,6 +21,14 @@ export default function Login(props) {
     props.history.replace({ pathname: '/tasks' });
   };
 
+  if (!accessToken) {
+    const localAccessToken = window.localStorage.getItem('taskifyAccesToken');
+
+    if (localAccessToken) {
+      setAccessToken(localAccessToken);
+    }
+  }
+
   if (accessToken) {
     redirectAfterLogin();
   }
@@ -38,11 +46,15 @@ export default function Login(props) {
 
         dispatch(setUser(data.user));
         dispatch(setAccessToken(data.access__token));
+
+        setTimeout(() => {
+          setLoading(false);
+
+          redirectAfterLogin();
+        }, 500);
       })
       .catch((error) => {
         setError(error.message);
-      })
-      .then(() => {
         setLoading(false);
       });
   };
