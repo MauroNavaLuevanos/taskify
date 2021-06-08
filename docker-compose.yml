@@ -22,3 +22,15 @@ services:
       - '8000:8000'
     depends_on:
       - db
+
+  front:
+    image: node:12-alpine
+    volumes:
+      - ./frontend:/app:cached
+    depends_on:
+      - back
+    working_dir: /app
+    ports:
+      - 3000:3000
+    command: npm start
+    tty: true

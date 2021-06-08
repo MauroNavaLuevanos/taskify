@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 const debug = true;
-const endpointHost = debug ? 'http://localhost:8000/' : '';
+const endpointHost = 'http://localhost:8000/';
 
 /**
  * Send a request to the API based in the provided path
