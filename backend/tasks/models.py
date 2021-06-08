@@ -6,33 +6,6 @@ from django.db import models
 from django.conf import settings
 
 
-class TasksGroupModel(models.Model):
-    '''Tasks Group model'''
-
-    name = models.CharField(
-        _("Name"),
-        max_length=50
-    )
-    description = models.TextField(
-        _("Description"),
-        blank=True,
-        null=True
-    )
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        verbose_name=_("Author"),
-        on_delete=models.CASCADE,
-        related_name='tasks_groups'
-    )
-
-    def __str__(self):
-        return str(self.name)
-
-    class Meta:
-        verbose_name = 'Tasks Group'
-        verbose_name_plural = 'Tasks Groups'
-
-
 class TaskModel(models.Model):
     '''Task model'''
 

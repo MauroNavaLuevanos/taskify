@@ -4,15 +4,7 @@
 from django.contrib import admin
 
 # Models
-from tasks.models import TasksGroupModel, TaskModel
-
-
-@admin.register(TasksGroupModel)
-class TasksGroupAdmin(admin.ModelAdmin):
-    '''Tasks Groups Admin'''
-
-    list_display = ('name', 'author',)
-    list_filter = ('author',)
+from tasks.models import TaskModel
 
 @admin.register(TaskModel)
 class TaskAdmin(admin.ModelAdmin):
