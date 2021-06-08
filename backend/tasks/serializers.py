@@ -20,6 +20,7 @@ class TaskSerializer(serializers.ModelSerializer):
             'time_limit',
             'finished_date',
             'created',
+            'time_spent',
             'id'
         )
         read_only_fields = (

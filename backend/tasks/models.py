@@ -1,5 +1,8 @@
 '''Tasks Models'''
 
+# Python
+from datetime import datetime
+
 # Django
 from django.utils.translation import gettext_lazy as _
 from django.db import models
@@ -34,6 +37,19 @@ class TaskModel(models.Model):
         null=True
     )
     created = models.DateTimeField(_("Created Date"), auto_now_add=True)
+
+    @property
+    def time_spent(self):
+        difference = 0
+
+        if self.finished or not self.finished_date:
+            difference = (datetime.now().replace(tzinfo=None) - self.created.replace(tzinfo=None)).total_seconds()
+
+        else:
+            difference = (self.finished_date.replace(tzinfo=None) - self.created.replace(tzinfo=None)).total_seconds()
+
+        return difference / 60
+
 
     def __str__(self):
         return str(self.name)

@@ -11,7 +11,7 @@ import { deleteTask } from '../store/slicers/tasks';
 import { Link } from 'react-router-dom';
 
 // React Bootstrap
-import { Card, Alert, Button, Form, Spinner } from 'react-bootstrap';
+import { Card, Alert, Button, Form, Spinner, Badge } from 'react-bootstrap';
 
 // Utils
 import { SendAPIRequest } from '../utils/api-calls';
@@ -22,6 +22,11 @@ export default function Task(props) {
   const [error, setError] = useState(null);
 
   const accessToken = useSelector((store) => store.auth.accessToken);
+  const tasksTimeLabels = useSelector((store) => store.tasks.tasksTimeLabels);
+
+  // Task time label, detects if the the time limit is short, medium or large
+  const timeLimit = task.time_limit || 0;
+  const taskTimeLabel = tasksTimeLabels.find((ttl) => (timeLimit >= ttl.min && timeLimit <= ttl.max) || !ttl.max);
 
   const dispatch = useDispatch();
 
@@ -37,6 +42,12 @@ export default function Task(props) {
     return <Alert variant="danger">Invalid task</Alert>;
   }
 
+  /**
+   * Deletes a task in the store tasks list after sending a DELETE request to the API.
+   * The store action is fired only if the request response is ok
+   *
+   * @returns {void}
+   */
   const DeleteTask = () => {
     const taskId = task.id;
     setError(null);
@@ -91,6 +102,7 @@ export default function Task(props) {
           <Form.Check checked={task.finished} disabled={task.finished || loading} label="Task Completed" onChange={SetTaskAsFinished} />
           <h2>{task.name}</h2>
           <p>{task.description}</p>
+          <Badge variant={taskTimeLabel.color}>{taskTimeLabel.label}</Badge>
           {error && <Alert>{error}</Alert>}
         </Card.Body>
 
