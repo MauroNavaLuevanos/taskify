@@ -6,6 +6,7 @@ import CreateTask from '../pages/CreateTask';
 import EditTask from '../pages/EditTask';
 import Login from '../pages/Login';
 import TasksList from '../pages/TasksList';
+import Signup from '../pages/Signup';
 
 // Components
 import Layout from './Layout';
@@ -20,6 +21,7 @@ export default function App() {
       <Layout>
         <Switch>
           <Route exact path="/login" component={Login} />
+          <Route exact path="/signup" component={Signup} />
           <PrivateRoute exact path="/tasks" component={TasksList} />
           <PrivateRoute exact path="/tasks/create" component={CreateTask} />
           <PrivateRoute exact path="/tasks/:taskId" component={EditTask} />

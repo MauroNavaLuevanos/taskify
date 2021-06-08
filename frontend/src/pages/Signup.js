@@ -7,12 +7,19 @@ import { SendAPIRequest } from '../utils/api-calls';
 
 import { Alert } from 'react-bootstrap';
 
-import LoginForm from '../Components/LoginForm';
+import SignupForm from '../Components/SignupForm';
 
 export default function Login(props) {
-  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [signupForm, setSignupForm] = useState({
+    email: '',
+    password: '',
+    password_confirmation: '',
+    username: '',
+    first_name: '',
+    last_name: '',
+  });
 
   const dispatch = useDispatch();
 
@@ -42,14 +49,24 @@ export default function Login(props) {
     setError(null);
     setLoading(true);
 
-    SendAPIRequest('users/login/', accessToken, loginForm, 'POST', false)
+    SendAPIRequest('users/signup/', accessToken, signupForm, 'POST', false)
       .then((response) => {
         const { data } = response;
+        const requestBody = { email: signupForm.email, password: signupForm.password };
 
-        dispatch(setUser(data.user));
-        dispatch(setAccessToken(data.access__token));
+        SendAPIRequest('users/login/', accessToken, requestBody, 'POST', false)
+          .then((response) => {
+            const { data } = response;
 
-        redirectAfterLogin();
+            dispatch(setUser(data.user));
+            dispatch(setAccessToken(data.access__token));
+
+            redirectAfterLogin();
+          })
+          .catch((error) => {
+            setError(error.message);
+            setLoading(false);
+          });
       })
       .catch((error) => {
         setError(error.message);
@@ -69,7 +86,7 @@ export default function Login(props) {
    */
   const handleChange = (event) => {
     const fieldName = event.target.name;
-    const fieldType = typeof loginForm[fieldName];
+    const fieldType = typeof signupForm[fieldName];
     let value = event.target.value;
 
     if (!loading) {
@@ -84,8 +101,8 @@ export default function Login(props) {
           value = value || '';
       }
 
-      setLoginForm({
-        ...loginForm,
+      setSignupForm({
+        ...signupForm,
         [fieldName]: value,
       });
     }
@@ -99,9 +116,9 @@ export default function Login(props) {
 
   return (
     <React.Fragment>
-      <h2>Login</h2>
+      <h2>Signup</h2>
       {error && <Alert variant="danger">{error}</Alert>}
-      <LoginForm disabled={loading} loginForm={loginForm} submitMethod={handleSubmit} changeMethod={handleChange} />
+      <SignupForm disabled={loading} signupForm={signupForm} submitMethod={handleSubmit} changeMethod={handleChange} />
     </React.Fragment>
   );
 }
