@@ -32,16 +32,15 @@ export default function Task(props) {
 
   const dispatch = useDispatch();
 
+  /**
+   * Task classes helper
+   * */
   let TaskCardClasses = 'Task';
 
   if (!task.finished && !loading) {
     TaskCardClasses += ' shadow';
   } else {
     TaskCardClasses += ' bg-light';
-  }
-
-  if (!task) {
-    return <Alert variant="danger">Invalid task</Alert>;
   }
 
   /**
@@ -90,6 +89,10 @@ export default function Task(props) {
         }, 300);
       });
   };
+
+  if (!task) {
+    return <Alert variant="danger">Invalid task</Alert>;
+  }
 
   return (
     <div className="TaskWrapper mb-3">
