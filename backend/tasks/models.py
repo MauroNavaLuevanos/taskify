@@ -2,6 +2,7 @@
 
 # Python
 from datetime import datetime
+import math
 
 # Django
 from django.utils.translation import gettext_lazy as _
@@ -43,12 +44,14 @@ class TaskModel(models.Model):
         difference = 0
 
         if not self.finished or not self.finished_date:
-            difference = (datetime.now().replace(tzinfo=None) - self.created.replace(tzinfo=None)).total_seconds()
+            difference = (
+                datetime.now().replace(tzinfo=None) - self.created.replace(tzinfo=None)
+            ).total_seconds()
 
         else:
             difference = (self.finished_date.replace(tzinfo=None) - self.created.replace(tzinfo=None)).total_seconds()
 
-        return difference / 60
+        return math.floor(difference / 60)
 
 
     def __str__(self):

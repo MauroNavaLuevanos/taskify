@@ -93,7 +93,7 @@ export default function EditTask(props) {
       </Form.Group>
 
       <Button type="submit" disabled={disabled} variant="primary">
-        Save Changes
+        {taskForm.id ? 'Save Changes' : 'Create'}
       </Button>
     </Form>
   );

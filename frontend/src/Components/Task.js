@@ -27,6 +27,8 @@ export default function Task(props) {
   // Task time label, detects if the the time limit is short, medium or large
   const timeLimit = task.time_limit || 0;
   const taskTimeLabel = tasksTimeLabels.find((ttl) => (timeLimit >= ttl.min && timeLimit <= ttl.max) || !ttl.max);
+  const taskTimeAlert =
+    task.time_spent > task.time_limit ? (task.finished ? 'You reached the deadline.' : "Oh no! It's taking too long") : null;
 
   const dispatch = useDispatch();
 
@@ -102,7 +104,20 @@ export default function Task(props) {
           <Form.Check checked={task.finished} disabled={task.finished || loading} label="Task Completed" onChange={SetTaskAsFinished} />
           <h2>{task.name}</h2>
           <p>{task.description}</p>
-          <Badge variant={taskTimeLabel.color}>{taskTimeLabel.label}</Badge>
+
+          <h4>
+            <Badge variant={taskTimeLabel.color}>
+              {taskTimeLabel.label}
+              <Badge className="ml-2" variant="secondary">
+                {task.time_limit} minutes
+              </Badge>
+            </Badge>
+          </h4>
+
+          {task.finished && <h5>You took {task.time_spent} minutes to finish this task.</h5>}
+
+          {taskTimeAlert && <h5 className="text-danger">{taskTimeAlert}</h5>}
+
           {error && <Alert>{error}</Alert>}
         </Card.Body>
 
