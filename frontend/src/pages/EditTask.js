@@ -1,7 +1,9 @@
 /* Edit task page */
 
 // React
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useSelector } from 'react-redux';
 
 // React Bootstrap
 import { Alert } from 'react-bootstrap';
@@ -12,47 +14,40 @@ import TaskForm from '../Components/TaskForm';
 // Utils
 import { SendAPIRequest } from '../utils/api-calls';
 
-export default class EditTask extends React.Component {
-  constructor(props) {
-    super(props);
+export default function EditTask(props) {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [enableToEdit, setEnableToEdit] = useState(true);
+  const [taskForm, setTaskForm] = useState({
+    id: null,
+    name: '',
+    description: '',
+    finished: false,
+    time_limit: 0,
+  });
 
-    this.state = {
-      accessToken: '3ff5cc5236d92852c74d7fc272b39de715061e8f',
-      error: null,
-      enableToEdit: false,
-      loading: true,
-      taskForm: {
-        name: '',
-        description: '',
-        finished: false,
-        time_limit: 0,
-      },
-    };
-  }
+  const accessToken = useSelector((store) => store.auth.accessToken);
 
   /**
    * Fetch a task based in the id provided by react router
    *
    * @returns {void}
    */
-  fetchTask = async () => {
-    const { accessToken } = this.state;
-    const taskId = this.props.match.params.taskId;
+  const fetchTask = () => {
+    const taskId = props.match.params.taskId;
 
     SendAPIRequest(`tasks/${taskId}/`, accessToken)
       .then((response) => {
         const { data } = response;
 
-        this.setState({
-          taskForm: data,
-          enableToEdit: !data.finished,
-        });
+        setTaskForm(data);
+        setEnableToEdit(!data.finished);
       })
       .catch((error) => {
-        this.setState({ error: error.message });
+        setError(error.message);
       })
       .then(() => {
-        this.setState({ loading: false });
+        setLoading(false);
       });
   };
 
@@ -63,24 +58,22 @@ export default class EditTask extends React.Component {
    *
    * @returns {void}
    */
-  updateTask = () => {
-    const { accessToken, taskForm, enableToEdit } = this.state;
-    const taskId = this.props.match.params.taskId;
+  const updateTask = () => {
+    const taskId = props.match.params.taskId;
 
     if (enableToEdit) {
       SendAPIRequest(`tasks/${taskId}/`, accessToken, taskForm, 'PUT')
         .then((response) => {
           const { data } = response;
-          this.setState({
-            taskForm: data,
-            enableToEdit: !data.finished,
-          });
+
+          setTaskForm(data);
+          setEnableToEdit(!data.finished);
         })
         .catch((error) => {
-          this.setState({ error: error.message });
+          setError(error.message);
         })
         .then(() => {
-          this.setState({ loading: false });
+          setLoading(false);
         });
     }
   };
@@ -95,29 +88,28 @@ export default class EditTask extends React.Component {
    * @param {InputEvent} event
    * @returns {void}
    */
-  handleChange = (event) => {
-    const { taskForm, enableToEdit } = this.state;
+  const handleChange = (event) => {
     const fieldName = event.target.name;
     const fieldType = typeof taskForm[fieldName];
     let value = event.target.value;
+
+    console.log();
 
     switch (fieldType) {
       case 'boolean':
         value = event.target.checked;
         break;
       case 'number':
-        value = parseInt(event.target.value);
+        value = parseInt(event.target.value || 0);
         break;
       default:
         value = value || '';
     }
 
     if (enableToEdit) {
-      this.setState({
-        taskForm: {
-          ...taskForm,
-          [fieldName]: value,
-        },
+      setTaskForm({
+        ...taskForm,
+        [fieldName]: value,
       });
     }
   };
@@ -130,39 +122,34 @@ export default class EditTask extends React.Component {
    *
    * @param {Event} event
    */
-  handleSubmit = (event) => {
-    const { enableToEdit } = this.state;
-
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     if (enableToEdit) {
-      this.setState({ loading: true, error: null });
+      setLoading(true);
+      setError(null);
 
-      this.updateTask();
+      updateTask();
     }
   };
 
-  componentDidMount() {
-    this.fetchTask();
+  useEffect(() => {
+    fetchTask();
+  }, []);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
   }
 
-  render() {
-    const { loading, taskForm, error, enableToEdit } = this.state;
-
-    if (loading) {
-      return <h1>Loading...</h1>;
-    }
-
-    if (!taskForm) {
-      return <Alert variant="danger">Invalid task</Alert>;
-    }
-
-    return (
-      <React.Fragment>
-        <h1>Edit task</h1>
-        {error && <Alert variant="danger">{error}</Alert>}
-        <TaskForm disabled={!enableToEdit} changeMethod={this.handleChange} taskForm={taskForm} submitMethod={this.handleSubmit} />
-      </React.Fragment>
-    );
+  if (!taskForm) {
+    return <Alert variant="danger">Invalid task</Alert>;
   }
+
+  return (
+    <React.Fragment>
+      <h1>Edit task</h1>
+      {error && <Alert variant="danger">{error}</Alert>}
+      <TaskForm disabled={!enableToEdit} changeMethod={handleChange} taskForm={taskForm} submitMethod={handleSubmit} />
+    </React.Fragment>
+  );
 }

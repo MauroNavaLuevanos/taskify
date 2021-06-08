@@ -25,13 +25,12 @@ export default function TasksList() {
   const [tasksFetched, setTasksFetched] = useState(false);
 
   const tasks = useSelector((state) => state.tasks.tasks);
+  const accessToken = useSelector((store) => store.auth.accessToken);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchTasks = () => {
       if (!tasksFetched) {
-        const accessToken = '3ff5cc5236d92852c74d7fc272b39de715061e8f';
-
         SendAPIRequest('tasks/', accessToken)
           .then((response) => {
             dispatch(setTasks(response.data));
@@ -53,7 +52,7 @@ export default function TasksList() {
     tasks && tasks.length ? (
       tasks.map((task) => (task ? <Task key={task.id} task={task} /> : <React.Fragment></React.Fragment>))
     ) : (
-      <h2>No hay tareas asignadas a este usuario</h2>
+      <Alert variant="warning">This hasn't tasks. Try creating one.</Alert>
     );
 
   if (loading) {

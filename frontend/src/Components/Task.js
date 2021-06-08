@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 
 // React Reudx
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteTask } from '../store/slicers/tasks';
 
 // React Router
@@ -20,7 +20,8 @@ export default function Task(props) {
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState(props.task);
   const [error, setError] = useState(null);
-  const accesToken = '3ff5cc5236d92852c74d7fc272b39de715061e8f';
+
+  const accessToken = useSelector((store) => store.auth.accessToken);
 
   const dispatch = useDispatch();
 
@@ -36,32 +37,32 @@ export default function Task(props) {
     return <Alert variant="danger">Invalid task</Alert>;
   }
 
-  function DeleteTask() {
+  const DeleteTask = () => {
     const taskId = task.id;
     setError(null);
     setLoading(true);
 
-    SendAPIRequest(`tasks/${task.id}/`, accesToken, {}, 'DELETE')
-      .then((response) => {
+    SendAPIRequest(`tasks/${task.id}/`, accessToken, {}, 'DELETE')
+      .then(() => {
         dispatch(deleteTask(taskId));
       })
       .catch((error) => {
         setError(error.message);
       });
-  }
+  };
 
   /**
    * Sets the task as finished, sending a PATCH method with the finished attribute as true
    *
    * @returns {void}
    */
-  function SetTaskAsFinished() {
+  const SetTaskAsFinished = () => {
     const taskId = task.id;
 
     setLoading(true);
     setError(null);
 
-    SendAPIRequest(`tasks/${taskId}/`, accesToken, { finished: true }, 'PATCH')
+    SendAPIRequest(`tasks/${taskId}/`, accessToken, { finished: true }, 'PATCH')
       .then((response) => {
         const { data } = response;
 
@@ -75,7 +76,7 @@ export default function Task(props) {
           setLoading(false);
         }, 300);
       });
-  }
+  };
 
   return (
     <div className="TaskWrapper mb-3">

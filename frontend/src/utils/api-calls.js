@@ -10,7 +10,9 @@ const endpointHost = debug ? 'http://localhost:8000/' : '';
  * @param {string} accessToken Access Token provided after user login
  * @param {Object} body Body as object
  * @param {string} method GET | POST | PUT | DELETE | PATCH
- * @returns {Promise<Object>} Request response data
+ * @param {boolean} useToken Enable token authorization
+ *
+ * @returns {Promise<Object>} Request response
  */
 export function SendAPIRequest(path = '', accessToken = '', payload = {}, method = 'GET', useToken = true) {
   return new Promise((resolve, reject) => {

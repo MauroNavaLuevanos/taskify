@@ -21,14 +21,6 @@ export default function Login(props) {
     props.history.replace({ pathname: '/tasks' });
   };
 
-  if (!accessToken) {
-    const localAccessToken = window.localStorage.getItem('taskifyAccesToken');
-
-    if (localAccessToken) {
-      setAccessToken(localAccessToken);
-    }
-  }
-
   if (accessToken) {
     redirectAfterLogin();
   }
@@ -40,18 +32,14 @@ export default function Login(props) {
     setError(null);
     setLoading(true);
 
-    SendAPIRequest('users/login/', 'a', { email, password }, 'POST', false)
+    SendAPIRequest('users/login/', accessToken, { email, password }, 'POST', false)
       .then((response) => {
         const { data } = response;
 
         dispatch(setUser(data.user));
         dispatch(setAccessToken(data.access__token));
 
-        setTimeout(() => {
-          setLoading(false);
-
-          redirectAfterLogin();
-        }, 500);
+        redirectAfterLogin();
       })
       .catch((error) => {
         setError(error.message);

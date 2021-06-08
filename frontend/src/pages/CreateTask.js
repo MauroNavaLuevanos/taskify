@@ -1,5 +1,7 @@
 // React
-import React from 'react';
+import React, { useState } from 'react';
+
+import { useSelector } from 'react-redux';
 
 // React Bootstrap
 import { Alert } from 'react-bootstrap';
@@ -10,24 +12,19 @@ import TaskForm from '../Components/TaskForm';
 // Utils
 import { SendAPIRequest } from '../utils/api-calls';
 
-export default class CreateTask extends React.Component {
-  constructor(props) {
-    super(props);
+export default function CreateTask() {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [enableToEdit, setEnableToEdit] = useState(true);
+  const [taskForm, setTaskForm] = useState({
+    id: null,
+    name: '',
+    description: '',
+    finished: false,
+    time_limit: 0,
+  });
 
-    this.state = {
-      accessToken: '3ff5cc5236d92852c74d7fc272b39de715061e8f',
-      error: null,
-      loading: false,
-      enableToEdit: true,
-      taskForm: {
-        id: null,
-        name: '',
-        description: '',
-        finished: false,
-        time_limit: 0,
-      },
-    };
-  }
+  const accessToken = useSelector((store) => store.auth.accessToken);
 
   /**
    * Creates a task if the id stills as null in the taskForm.
@@ -37,29 +34,26 @@ export default class CreateTask extends React.Component {
    *
    * @returns {void}
    */
-  saveTask = () => {
-    const { accessToken, taskForm, enableToEdit } = this.state;
+  const saveTask = () => {
     const taskId = taskForm.id;
     const requestMethod = taskId ? 'PUT' : 'POST';
     let requestPath = taskId ? `tasks/${taskId}/` : 'tasks/';
 
     if (enableToEdit) {
-      this.setState({ loading: true });
+      setLoading(true);
 
       SendAPIRequest(requestPath, accessToken, taskForm, requestMethod)
         .then((response) => {
           const { data } = response;
 
-          this.setState({
-            taskForm: data,
-            enableToEdit: !data.finished,
-          });
+          setTaskForm(data);
+          setEnableToEdit(!data.finished);
         })
         .catch((error) => {
-          this.setState({ error: error.message });
+          setError(error.message);
         })
         .then(() => {
-          this.setState({ loading: false });
+          setLoading(false);
         });
     }
   };
@@ -72,15 +66,14 @@ export default class CreateTask extends React.Component {
    *
    * @param {Event} event
    */
-  handleSubmit = (event) => {
-    const { enableToEdit } = this.state;
-
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     if (enableToEdit) {
-      this.setState({ loading: true, error: null });
+      setLoading(true);
+      setError(null);
 
-      this.saveTask();
+      saveTask();
     }
   };
 
@@ -94,8 +87,7 @@ export default class CreateTask extends React.Component {
    * @param {InputEvent} event
    * @returns {void}
    */
-  handleChange = (event) => {
-    const { taskForm, enableToEdit } = this.state;
+  const handleChange = (event) => {
     const fieldName = event.target.name;
     const fieldType = typeof taskForm[fieldName];
     let value = event.target.value;
@@ -112,27 +104,20 @@ export default class CreateTask extends React.Component {
     }
 
     if (enableToEdit) {
-      this.setState({
-        taskForm: {
-          ...taskForm,
-          [fieldName]: value,
-        },
+      setTaskForm({
+        ...taskForm,
+        [fieldName]: value,
       });
     }
   };
 
-  render() {
-    const { error, taskForm, loading } = this.state;
-
-    if (loading) {
-      return <h1>Loading...</h1>;
-    }
-
-    return (
-      <React.Fragment>
-        {error && <Alert variant="danger">{error}</Alert>}
-        <TaskForm taskForm={taskForm} changeMethod={this.handleChange} submitMethod={this.handleSubmit} />
-      </React.Fragment>
-    );
-  }
+  return loading ? (
+    <h1>Loading...</h1>
+  ) : (
+    <React.Fragment>
+      <h1>Create task</h1>
+      {error && <Alert variant="danger">{error}</Alert>}
+      <TaskForm taskForm={taskForm} changeMethod={handleChange} submitMethod={handleSubmit} />
+    </React.Fragment>
+  );
 }
